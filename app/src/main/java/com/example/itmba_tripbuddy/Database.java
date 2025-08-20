@@ -18,6 +18,9 @@ public class  Database extends SQLiteOpenHelper {
     private static final String Notes="id";
     private static final String Type="id";//spinner input
     private static final String CustomCost="id";//add travel cost
+    private static final String TripCounter="id";
+
+
 
     public Database(@Nullable Context context ) {
         super(context, DBName, null, DBVersion);

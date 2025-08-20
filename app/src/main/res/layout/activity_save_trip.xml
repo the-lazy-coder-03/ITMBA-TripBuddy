@@ -40,12 +40,43 @@
         android:layout_height="wrap_content"
         android:hint="Enter Food Expenses"
         android:layout_marginBottom="24dp" />
-
+    <TextView
+        android:id="@+id/DisplayCost"
+        android:layout_width="226dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:layout_marginBottom="20dp"
+        />
+    <TextView
+        android:id="@+id/Discount"
+        android:layout_width="226dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:layout_marginBottom="20dp"
+        />
+    <TextView
+        android:id="@+id/FinalCost"
+        android:layout_width="226dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:layout_marginBottom="20dp"
+        />
     <Button
-        android:id="@+id/button"
-        android:layout_width="wrap_content"
+        android:id="@+id/SaveTripBtn"
+        android:layout_width="135dp"
         android:layout_height="wrap_content"
         android:text="Save Trip"
+        android:layout_marginBottom="20dp"
         android:textColor="@android:color/white" />
+    <Button
+        android:id="@+id/ConfBtn"
+        android:layout_width="135dp"
+        android:layout_height="wrap_content"
+        android:text="Confirm Trip"
+        android:visibility="invisible"
+        android:textColor="@android:color/white" />
+
+
+
 
 </LinearLayout>

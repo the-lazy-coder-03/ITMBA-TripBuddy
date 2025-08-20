@@ -12,9 +12,16 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ITMBATripBuddy">
         <activity
+            android:name=".LoginScreen"
+            android:exported="false"
+            android:theme="@style/Theme.ITMBATripBuddy" />
+        <activity
+            android:name=".ui.login.LoginActivity"
+            android:exported="false"
+            android:label="@string/title_activity_login" />
+        <activity
             android:name=".SaveTrip"
-            android:exported="false" />
-        <!-- Welcome Message Activity -->
+            android:exported="false" /> <!-- Welcome Message Activity -->
         <activity
             android:name=".WelcomeMessage"
             android:exported="false" /> <!-- Splash Screen Activity -->
