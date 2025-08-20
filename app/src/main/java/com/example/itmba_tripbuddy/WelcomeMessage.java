@@ -22,8 +22,10 @@ public class WelcomeMessage extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+
         new Handler().postDelayed(() -> {
-            Intent intent = new Intent(WelcomeMessage.this,MainActivity.class);
+            Intent intent = new Intent(WelcomeMessage.this,LoginScreen.class);
             startActivity(intent);
             finish();
         }, 3000); // 3 seconds

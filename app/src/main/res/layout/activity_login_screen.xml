@@ -37,9 +37,27 @@
         android:layout_marginBottom="25dp"
         android:inputType="numberPassword" />
 
-    <Button
-        android:id="@+id/button"
-        android:layout_width="250dp"
+    <!-- Horizontal container for buttons -->
+    <LinearLayout
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Login/SignUP" />
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp">
+
+        <Button
+            android:id="@+id/LoginBtn"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:text="Login"
+            android:layout_marginEnd="16dp" />
+
+        <Button
+            android:id="@+id/SignUpbtn"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:text="Sign Up" />
+    </LinearLayout>
+
 </LinearLayout>
