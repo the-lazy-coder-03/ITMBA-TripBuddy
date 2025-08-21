@@ -1,6 +1,8 @@
 package com.example.itmba_tripbuddy;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -14,14 +16,14 @@ public class Database extends SQLiteOpenHelper {
 
     // Table and columns
     private static final String TABLE_NAME = "TRIPINFO";
-    private static final String COL_ID = "id";
-    private static final String COL_EMAIL = "Email";
-    private static final String COL_PASSWORD = "Password";
-    private static final String COL_DESTINATION = "Destination";
-    private static final String COL_NOTES = "Notes";
-    private static final String COL_TYPE = "SpinnerInput";   // trip type (from spinner)
-    private static final String COL_COST = "TravelCost";     // cost of travel
-    private static final String COL_COUNTER = "TripCounter"; // number of trips
+    private static final String ID = "id";
+    private static final String EMAIL = "Email";
+    private static final String PASSWORD = "Password";
+    private static final String DESTINATION = "Destination";
+    private static final String NOTES = "Notes";
+    private static final String TYPE = "SpinnerInput";   // trip type (from spinner)
+    private static final String COST = "TravelCost";     // cost of travel
+    private static final String COUNTER = "TripCounter"; // number of trips
 
     public Database(@Nullable Context context) {
         super(context, DB_NAME, null, DB_VERSION);
@@ -31,17 +33,18 @@ public class Database extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         // Create table with all columns
         String createTable = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + " ("
-                + COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + COL_EMAIL + " TEXT, "
-                + COL_PASSWORD + " TEXT, "
-                + COL_DESTINATION + " TEXT, "
-                + COL_NOTES + " TEXT, "
-                + COL_TYPE + " TEXT, "
-                + COL_COST + " REAL, "
-                + COL_COUNTER + " INTEGER"
+                + ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + EMAIL + " TEXT, "
+                + PASSWORD + " TEXT, "
+                + DESTINATION + " TEXT, "
+                + NOTES + " TEXT, "
+                + TYPE + " TEXT, "
+                + COST + " REAL, "
+                + COUNTER + " INTEGER"
                 + ");";
 
         db.execSQL(createTable);
+        System.out.println("The db was created");
     }
 
     @Override
@@ -50,4 +53,31 @@ public class Database extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
         onCreate(db);
     }
+    // Insert a new user
+    public boolean insertUser(String email, String password) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("Email", email);
+        values.put("Password", password);
+
+        long result = db.insert("TRIPINFO", null, values);
+        db.close();
+        return result != -1; // true if successful
+    }
+    public boolean checkUser(String email, String password) {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        // Query to check if user exists with matching email and password
+        String query = "SELECT * FROM " + TABLE_NAME + " WHERE " + EMAIL + " = ? AND " + PASSWORD + " = ?";
+        String[] selectionArgs = {email, password};
+
+        Cursor cursor = db.rawQuery(query, selectionArgs);
+        boolean userExists = cursor.getCount() > 0;
+
+        cursor.close();
+        db.close();
+        return userExists;
+    }
+
 }
+
