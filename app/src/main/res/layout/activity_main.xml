@@ -16,7 +16,6 @@
         android:background="#4287f5"
         android:text="View Gallery" />
 
-
     <Button
         android:id="@+id/PlanTripbtn"
         android:layout_width="210dp"
@@ -31,5 +30,18 @@
         android:layout_height="56dp"
         android:background="#4287f5"
         android:text="Create Memory" />
+
+    <!-- Spacer View to add space -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="16dp" />
+
+    <Button
+        android:id="@+id/SettingsBtn"
+        android:layout_width="210dp"
+        android:layout_height="56dp"
+        android:layout_marginBottom="16dp"
+        android:background="#4287f5"
+        android:text="Settings" />
 
 </LinearLayout>

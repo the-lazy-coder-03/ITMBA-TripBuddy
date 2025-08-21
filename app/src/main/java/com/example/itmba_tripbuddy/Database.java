@@ -12,13 +12,13 @@ public class  Database extends SQLiteOpenHelper {
     private static final int DBVersion=1;
     private static final String TableName="TRIPINFO";
     private static final String KeyID="id";
-    private static final String Email="id";
-    private static final String Password="id";
-    private static final String Destination="id";
-    private static final String Notes="id";
-    private static final String Type="id";//spinner input
-    private static final String CustomCost="id";//add travel cost
-    private static final String TripCounter="id";
+    private static final String Email="Email";
+    private static final String Password="Password";
+    private static final String Destination="Destination";
+    private static final String Notes="Notes";
+    private static final String Type="SpinnerInput";//spinner input
+    private static final String CustomCost="TravelCost";//add travel cost
+    private static final String TripCounter="TripCounter";
 
 
 
@@ -29,7 +29,7 @@ public class  Database extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
 
-        db.execSQL("CREATE TABLE "+TableName);
+        db.execSQL("CREATE TABLE IF NOT EXISTS "+TableName);
 
     }
 

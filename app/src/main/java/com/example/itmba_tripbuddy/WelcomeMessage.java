@@ -25,7 +25,7 @@ public class WelcomeMessage extends AppCompatActivity {
 
 
         new Handler().postDelayed(() -> {
-            Intent intent = new Intent(WelcomeMessage.this,LoginScreen.class);
+            Intent intent = new Intent(WelcomeMessage.this,LoginScreen .class);
             startActivity(intent);
             finish();
         }, 3000); // 3 seconds
