@@ -14,16 +14,23 @@ public class Database extends SQLiteOpenHelper {
     private static final String DB_NAME = "TripInfo.db";
     private static final int DB_VERSION = 1;
 
-    // Table and columns
-    private static final String TABLE_NAME = "TRIPINFO";
-    private static final String ID = "id";
+    // Users table
+    private static final String TABLE_USERS = "Users";
+    private static final String USER_ID = "id";
     private static final String EMAIL = "Email";
     private static final String PASSWORD = "Password";
+
+    // Trips table
+    private static final String TABLE_TRIPS = "Trips";
+    private static final String TRIP_ID = "id";
+    private static final String USER_FK = "user_id"; // foreign key to Users table
+    private static final String TRIP_NAME = "tripName";
+    private static final String TRIP_DATE = "tripDate";
+    private static final String TRIP_TYPE = "tripType";
     private static final String DESTINATION = "Destination";
     private static final String NOTES = "Notes";
-    private static final String TYPE = "SpinnerInput";   // trip type (from spinner)
-    private static final String COST = "TravelCost";     // cost of travel
-    private static final String COUNTER = "TripCounter"; // number of trips
+    private static final String COST = "TravelCost";
+    private static final String COUNTER = "TripCounter";
 
     public Database(@Nullable Context context) {
         super(context, DB_NAME, null, DB_VERSION);
@@ -31,53 +38,101 @@ public class Database extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        // Create table with all columns
-        String createTable = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + " ("
-                + ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + EMAIL + " TEXT, "
-                + PASSWORD + " TEXT, "
+        // Create Users table
+        String createUsers = "CREATE TABLE IF NOT EXISTS " + TABLE_USERS + " ("
+                + USER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + EMAIL + " TEXT UNIQUE, "
+                + PASSWORD + " TEXT);";
+
+        // Create Trips table
+        String createTrips = "CREATE TABLE IF NOT EXISTS " + TABLE_TRIPS + " ("
+                + TRIP_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + USER_FK + " INTEGER, "
+                + TRIP_NAME + " TEXT, "
+                + TRIP_DATE + " TEXT, "
+                + TRIP_TYPE + " TEXT, "
                 + DESTINATION + " TEXT, "
                 + NOTES + " TEXT, "
-                + TYPE + " TEXT, "
                 + COST + " REAL, "
-                + COUNTER + " INTEGER"
-                + ");";
+                + COUNTER + " INTEGER, "
+                + "FOREIGN KEY(" + USER_FK + ") REFERENCES " + TABLE_USERS + "(" + USER_ID + "));";
 
-        db.execSQL(createTable);
-        System.out.println("The db was created");
+        db.execSQL(createUsers);
+        db.execSQL(createTrips);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        // Drop old table if upgrading, then recreate
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_TRIPS);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_USERS);
         onCreate(db);
     }
-    // Insert a new user
+
+    // ---------------- USER METHODS ---------------- //
+
     public boolean insertUser(String email, String password) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put("Email", email);
-        values.put("Password", password);
+        values.put(EMAIL, email);
+        values.put(PASSWORD, password);
 
-        long result = db.insert("TRIPINFO", null, values);
+        long result = db.insert(TABLE_USERS, null, values);
         db.close();
-        return result != -1; // true if successful
+        return result != -1;
     }
+
     public boolean checkUser(String email, String password) {
         SQLiteDatabase db = this.getReadableDatabase();
-
-        // Query to check if user exists with matching email and password
-        String query = "SELECT * FROM " + TABLE_NAME + " WHERE " + EMAIL + " = ? AND " + PASSWORD + " = ?";
-        String[] selectionArgs = {email, password};
-
-        Cursor cursor = db.rawQuery(query, selectionArgs);
-        boolean userExists = cursor.getCount() > 0;
-
+        Cursor cursor = db.rawQuery(
+                "SELECT * FROM " + TABLE_USERS + " WHERE " + EMAIL + "=? AND " + PASSWORD + "=?",
+                new String[]{email, password}
+        );
+        boolean exists = cursor.getCount() > 0;
         cursor.close();
         db.close();
-        return userExists;
+        return exists;
     }
 
-}
+    public int getUserId(String email, String password) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(
+                "SELECT " + USER_ID + " FROM " + TABLE_USERS + " WHERE " + EMAIL + "=? AND " + PASSWORD + "=?",
+                new String[]{email, password}
+        );
+        int userId = -1;
+        if (cursor.moveToFirst()) {
+            userId = cursor.getInt(0);
+        }
+        cursor.close();
+        db.close();
+        return userId;
+    }
 
+    // ---------------- TRIP METHODS ---------------- //
+
+    public boolean insertTrip(int userId, String name, String date, String type,
+                              String destination, String notes, double cost, int counter) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(USER_FK, userId);
+        values.put(TRIP_NAME, name);
+        values.put(TRIP_DATE, date);
+        values.put(TRIP_TYPE, type);
+        values.put(DESTINATION, destination);
+        values.put(NOTES, notes);
+        values.put(COST, cost);
+        values.put(COUNTER, counter);
+
+        long result = db.insert(TABLE_TRIPS, null, values);
+        db.close();
+        return result != -1;
+    }
+
+    public Cursor getTripsForUser(int userId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        return db.rawQuery(
+                "SELECT * FROM " + TABLE_TRIPS + " WHERE " + USER_FK + "=?",
+                new String[]{String.valueOf(userId)}
+        );
+    }
+}
