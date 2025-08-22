@@ -7,7 +7,15 @@
     android:orientation="vertical"
     android:padding="24dp"
     android:gravity="center_horizontal"
-    tools:context=".SaveTrip">
+    tools:context=".PlanTrip">
+    <Button
+        android:id="@+id/btnBackToMain"
+        android:layout_width="77dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="20dp"
+        android:layout_gravity="left"
+        android:text="Back"
+        android:textSize="9sp" />
 
     <EditText
         android:id="@+id/EdtDestination"

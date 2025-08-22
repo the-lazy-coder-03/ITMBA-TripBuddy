@@ -6,6 +6,15 @@
     android:orientation="vertical"
     android:padding="16dp">
 
+    <Button
+        android:id="@+id/btnBackToMain"
+        android:layout_width="77dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="20dp"
+        android:text="Back"
+        android:textSize="9sp" />
+
+
     <TextView
         android:id="@+id/title"
         android:layout_width="match_parent"

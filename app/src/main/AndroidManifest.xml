@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ITMBATripBuddy" >
         <activity
-            android:name=".ViewSavedTrips"
+            android:name=".ViewGalleryClass"
             android:exported="false" />
         <activity
             android:name=".MainActivity2"
@@ -27,7 +27,7 @@
             android:exported="false"
             android:label="@string/title_activity_login" />
         <activity
-            android:name=".SaveTrip"
+            android:name=".PlanTrip"
             android:exported="false" /> <!-- Welcome Message Activity -->
         <activity
             android:name=".WelcomeMessage"

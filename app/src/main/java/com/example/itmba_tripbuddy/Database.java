@@ -12,7 +12,7 @@ public class Database extends SQLiteOpenHelper {
 
     // Database details
     private static final String DB_NAME = "TripInfo.db";
-    private static final int DB_VERSION = 2;
+    private static final int DB_VERSION = 3;
 
     // Users table
     private static final String TABLE_USERS = "Users";
@@ -135,4 +135,17 @@ public class Database extends SQLiteOpenHelper {
                 new String[]{String.valueOf(userId)}
         );
     }
+    public int getTripCountForUser(int userId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery(
+                "SELECT COUNT(*) FROM " + TABLE_TRIPS + " WHERE " + USER_FK + "=?",
+                new String[]{String.valueOf(userId)}
+        );
+        int count = 0;
+        if (c.moveToFirst()) count = c.getInt(0);
+        c.close();
+        db.close();
+        return count;
+    }
+
 }

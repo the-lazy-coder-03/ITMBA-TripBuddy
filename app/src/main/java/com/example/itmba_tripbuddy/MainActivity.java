@@ -27,27 +27,36 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-        // Ensure DB is created if first run (optional – you don't need to keep a reference)
+        // Ensure DB exists (optional)
         new Database(this).getWritableDatabase().close();
 
-        // 1) Try to get userId from the Intent
+        // Get userId from intent or session
         userId = getIntent().getIntExtra("userId", -1);
-        // 2) Fallback to Session (handles cases where Intent extra wasn't forwarded)
         if (userId == -1) userId = SessionManager.getUserId(this);
 
         if (userId == -1) {
             Toast.makeText(this, "No user logged in. Please log in again.", Toast.LENGTH_SHORT).show();
-            // Optionally redirect to LoginScreen
             startActivity(new Intent(this, LoginScreen.class));
             finish();
             return;
         }
 
+        // Plan Trip button -> PlanTrip
         Button planTripBtn = findViewById(R.id.PlanTripbtn);
         planTripBtn.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, SaveTrip.class);
-            intent.putExtra("userId", userId); // ✅ forward the logged-in user
+            Intent intent = new Intent(MainActivity.this, PlanTrip.class);
+            intent.putExtra("userId", userId);
             startActivity(intent);
         });
+
+        // View Gallery button -> ViewGalleryClass (your saved trips list)
+        Button viewGalleryBtn = findViewById(R.id.ViewGallerybtn);
+        viewGalleryBtn.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, ViewGalleryClass.class);
+            intent.putExtra("userId", userId);
+            startActivity(intent);
+        });
+
     }
 }
+

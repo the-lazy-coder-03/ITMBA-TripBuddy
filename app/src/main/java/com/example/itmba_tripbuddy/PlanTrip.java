@@ -1,5 +1,6 @@
 package com.example.itmba_tripbuddy;
 
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
@@ -21,7 +22,7 @@ import java.time.LocalDate;
 import java.util.Date;
 import java.util.Locale;
 
-public class SaveTrip extends AppCompatActivity {
+public class PlanTrip extends AppCompatActivity {
 
     private Database dbHelper;
     private int userId;
@@ -32,8 +33,6 @@ public class SaveTrip extends AppCompatActivity {
     private Spinner spinnerTripType;
     private Button btnSaveTrip, btnConfirm;
 
-    // Simple discount rule (customize if you like)
-    private static final double DISCOUNT_THRESHOLD = 1000.0;
     private static final double DISCOUNT_RATE = 0.10; // 10%
 
     private final DecimalFormat moneyFmt = new DecimalFormat("#,##0.00");
@@ -79,26 +78,37 @@ public class SaveTrip extends AppCompatActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerTripType.setAdapter(adapter);
 
-        // Update cost display whenever user taps Save (you can also add TextWatchers if you want live updates)
+        // Calculate preview
         btnSaveTrip.setOnClickListener(v -> calculateAndShowCosts());
 
-        // Confirm actually writes to DB
+        // Confirm save
         btnConfirm.setOnClickListener(v -> saveTripToDb());
+
+        // Back button
+        Button backToMain = findViewById(R.id.btnBackToMain);
+        backToMain.setOnClickListener(v -> {
+            Intent intent = new Intent(PlanTrip.this, MainActivity.class);
+            intent.putExtra("userId", userId);
+            startActivity(intent);
+            finish();
+        });
     }
 
     private void calculateAndShowCosts() {
-        double custom = parseDoubleOrZero(edtCustomExpenses.getText().toString().trim());
-        double food   = parseDoubleOrZero(edtFoodExpenses.getText().toString().trim());
+        double custom   = parseDoubleOrZero(edtCustomExpenses.getText().toString().trim());
+        double food     = parseDoubleOrZero(edtFoodExpenses.getText().toString().trim());
         double subtotal = custom + food;
 
-        double discount = (subtotal >= DISCOUNT_THRESHOLD) ? subtotal * DISCOUNT_RATE : 0.0;
-        double finalCost = subtotal - discount;
+        // Count trips already saved (before this one)
+        int existingTrips = dbHelper.getTripCountForUser(userId);
+        boolean eligible  = existingTrips >= 3; // discount from 4th trip onward
+        double discount   = eligible ? subtotal * DISCOUNT_RATE : 0.0;
+        double finalCost  = subtotal - discount;
 
         tvDisplayCost.setText("Total cost: " + moneyFmt.format(subtotal));
-        tvDiscount.setText("Discount: " + moneyFmt.format(discount));
+        tvDiscount.setText("Discount: " + moneyFmt.format(discount) + (eligible ? " (loyalty)" : ""));
         tvFinalCost.setText("Final cost: " + moneyFmt.format(finalCost));
 
-        // Reveal the Confirm button after showing the calculation
         btnConfirm.setVisibility(Button.VISIBLE);
     }
 
@@ -114,33 +124,36 @@ public class SaveTrip extends AppCompatActivity {
             return;
         }
 
-        // Recompute costs (or read back from TextViews, but recomputing is safer)
-        double custom = parseDoubleOrZero(edtCustomExpenses.getText().toString().trim());
-        double food   = parseDoubleOrZero(edtFoodExpenses.getText().toString().trim());
+        // Recompute using the same logic at save time
+        double custom   = parseDoubleOrZero(edtCustomExpenses.getText().toString().trim());
+        double food     = parseDoubleOrZero(edtFoodExpenses.getText().toString().trim());
         double subtotal = custom + food;
-        double discount = (subtotal >= DISCOUNT_THRESHOLD) ? subtotal * DISCOUNT_RATE : 0.0;
-        double finalCost = subtotal - discount;
 
-        // Map to your DB schema
-        String tripName = destination;           // Using destination as the name
-        String tripDate = todayIso();            // "YYYY-MM-DD"
+        int existingTrips = dbHelper.getTripCountForUser(userId); // BEFORE inserting
+        boolean eligible  = existingTrips >= 3;
+        double discount   = eligible ? subtotal * DISCOUNT_RATE : 0.0;
+        double finalCost  = subtotal - discount;
+
+        // Map to DB schema
+        String tripName = destination;
+        String tripDate = todayIso();
         String tripType = type;
         String dest     = destination;
-        String note     = buildNotes(notes, custom, food, discount); // keep notes, add a small summary
+        String note     = buildNotes(notes, custom, food, discount);
         double cost     = finalCost;
-        int counter     = 1;
+        int counter     = existingTrips + 1; // optional running number
 
-        boolean ok = dbHelper.insertTrip(
-                userId, tripName, tripDate, tripType, dest, note, cost, counter
-        );
+        boolean ok = dbHelper.insertTrip(userId, tripName, tripDate, tripType, dest, note, cost, counter);
 
         if (ok) {
-            Toast.makeText(this, "Trip saved 🎉", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Trip saved ", Toast.LENGTH_SHORT).show();
             clearForm();
             btnConfirm.setVisibility(Button.INVISIBLE);
         } else {
             Toast.makeText(this, "Failed to save trip.", Toast.LENGTH_SHORT).show();
         }
+
+
     }
 
     private String buildNotes(String userNotes, double custom, double food, double discount) {
@@ -156,7 +169,7 @@ public class SaveTrip extends AppCompatActivity {
 
     private String todayIso() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            return LocalDate.now().toString(); // YYYY-MM-DD
+            return LocalDate.now().toString();
         } else {
             return new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
         }
