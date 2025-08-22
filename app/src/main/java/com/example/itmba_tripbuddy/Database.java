@@ -12,7 +12,7 @@ public class Database extends SQLiteOpenHelper {
 
     // Database details
     private static final String DB_NAME = "TripInfo.db";
-    private static final int DB_VERSION = 1;
+    private static final int DB_VERSION = 2;
 
     // Users table
     private static final String TABLE_USERS = "Users";

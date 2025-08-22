@@ -2,6 +2,7 @@ package com.example.itmba_tripbuddy;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Patterns;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -23,58 +24,82 @@ public class LoginScreen extends AppCompatActivity {
         setContentView(R.layout.activity_login_screen);
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            Insets bars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(bars.left, bars.top, bars.right, bars.bottom);
             return insets;
         });
 
-        // 🔹 Initialize database
         dbHelper = new Database(this);
 
-        // 🔹 Get UI elements
-        EditText editEmail = findViewById(R.id.editTextTextEmailAddress);
-        EditText editPassword = findViewById(R.id.editTextNumberPassword);
-        Button loginBtn = findViewById(R.id.LoginBtn);
+        EditText editEmail    = findViewById(R.id.editTextTextEmailAddress);
+        // IMPORTANT: XML should define this as textPassword (NOT numberPassword)
+        EditText editPassword = findViewById(R.id.editTextPassword);
+
+        Button loginBtn  = findViewById(R.id.LoginBtn);
         Button signupBtn = findViewById(R.id.SignUpbtn);
 
-        // 🔹 Handle Login button
         loginBtn.setOnClickListener(v -> {
             String email = editEmail.getText().toString().trim();
             String password = editPassword.getText().toString().trim();
 
-            if (email.isEmpty() || password.isEmpty()) {
-                Toast.makeText(LoginScreen.this, "Please enter email and password", Toast.LENGTH_SHORT).show();
-            } else {
-                boolean validUser = dbHelper.checkUser(email, password);
-                if (validUser) {
-                    Toast.makeText(LoginScreen.this, "Login Successful!", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(LoginScreen.this, MainActivity.class);
-                    startActivity(intent);
-                    finish();
-                } else {
-                    Toast.makeText(LoginScreen.this, "Invalid credentials", Toast.LENGTH_SHORT).show();
-                }
+            if (!validate(email, password)) return;
+
+            if (!dbHelper.checkUser(email, password)) {
+                Toast.makeText(this, "Invalid credentials", Toast.LENGTH_SHORT).show();
+                return;
             }
+
+            int userId = dbHelper.getUserId(email, password);
+            if (userId <= 0) {
+                Toast.makeText(this, "Login error: user not found", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            // Save session + go
+            SessionManager.saveUserId(this, userId);
+
+            Toast.makeText(this, "Login Successful!", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(LoginScreen.this, MainActivity.class);
+            intent.putExtra("userId", userId); // optional, session already saved
+            startActivity(intent);
+            finish();
         });
 
-        // 🔹 Handle Sign Up button (create account + go to main)
         signupBtn.setOnClickListener(v -> {
             String email = editEmail.getText().toString().trim();
             String password = editPassword.getText().toString().trim();
 
-            if (email.isEmpty() || password.isEmpty()) {
-                Toast.makeText(LoginScreen.this, "Please enter email and password to sign up", Toast.LENGTH_SHORT).show();
-            } else {
-                boolean inserted = dbHelper.insertUser(email, password);
-                if (inserted) {
-                    Toast.makeText(LoginScreen.this, "Account Created! Welcome 🎉", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(LoginScreen.this, MainActivity.class);
-                    startActivity(intent);
-                    finish(); // 🔹 optional but recommended
-                } else {
-                    Toast.makeText(LoginScreen.this, "Account creation failed", Toast.LENGTH_SHORT).show();
-                }
+            if (!validate(email, password)) return;
+
+            boolean inserted = dbHelper.insertUser(email, password);
+            if (!inserted) {
+                Toast.makeText(this, "Account creation failed (email may already exist)", Toast.LENGTH_SHORT).show();
+                return;
             }
+
+            int userId = dbHelper.getUserId(email, password);
+            if (userId <= 0) {
+                Toast.makeText(this, "Account created, but couldn’t fetch user ID", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            // Save session + go
+            SessionManager.saveUserId(this, userId);
+
+            Toast.makeText(this, "Account Created! Welcome 🎉", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(LoginScreen.this, MainActivity.class);
+            intent.putExtra("userId", userId); // optional
+            startActivity(intent);
+            finish();
         });
+    }
+
+    private boolean validate(String email, String password) {
+        if (email.isEmpty() || password.isEmpty()) {
+            Toast.makeText(this, "Please enter email and password", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        return true;
     }
 }
