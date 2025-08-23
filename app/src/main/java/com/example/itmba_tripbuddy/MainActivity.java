@@ -41,7 +41,11 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        // Plan Trip button -> PlanTrip
+        // ==============================
+        // Buttons setup
+        // ==============================
+
+        // Plan Trip button
         Button planTripBtn = findViewById(R.id.PlanTripbtn);
         planTripBtn.setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity.this, PlanTrip.class);
@@ -49,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        // View Gallery button -> ViewGalleryClass (your saved trips list)
+        // View Gallery button
         Button viewGalleryBtn = findViewById(R.id.ViewGallerybtn);
         viewGalleryBtn.setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity.this, ViewGalleryClass.class);
@@ -57,6 +61,32 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
+        // Create Memory button
+        Button createMemBtn = findViewById(R.id.CreateMembtn);
+        createMemBtn.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, PlanTrip.class); // <- was PlanTrip
+            intent.putExtra("userId", userId);
+            startActivity(intent);
+        });
+
+        // Settings button (uncomment this block only if SettingsActivity exists)
+        Button settingsBtn = findViewById(R.id.SettingsBtn);
+        settingsBtn.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+            intent.putExtra("userId", userId);
+            startActivity(intent);
+        });
+
+        // ==============================
+        // Logout button (top-right)
+        // ==============================
+        Button logoutBtn = findViewById(R.id.btnLogout);
+        logoutBtn.setOnClickListener(v -> {
+            SessionManager.clearSession(MainActivity.this);
+            Intent intent = new Intent(MainActivity.this, LoginScreen.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            finish();
+        });
     }
 }
-

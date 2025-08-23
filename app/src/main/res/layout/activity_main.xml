@@ -1,47 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center"
     tools:context=".MainActivity">
 
+    <!-- Logout button fixed top-right -->
     <Button
-        android:id="@+id/ViewGallerybtn"
-        android:layout_width="210dp"
-        android:layout_height="56dp"
-        android:layout_marginBottom="16dp"
-        android:background="#4287f5"
-        android:text="View Gallery" />
+        android:id="@+id/btnLogout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Logout"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_margin="16dp" />
 
-    <Button
-        android:id="@+id/PlanTripbtn"
-        android:layout_width="210dp"
-        android:layout_height="56dp"
-        android:layout_marginBottom="16dp"
-        android:background="#4287f5"
-        android:text="Plan Trip" />
+    <!-- Buttons stacked vertically in the center -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
-    <Button
-        android:id="@+id/CreateMembtn"
-        android:layout_width="210dp"
-        android:layout_height="56dp"
-        android:background="#4287f5"
-        android:text="Create Memory" />
+        <Button
+            android:id="@+id/ViewGallerybtn"
+            android:layout_width="210dp"
+            android:layout_height="56dp"
+            android:layout_marginBottom="16dp"
+            android:background="#4287f5"
+            android:text="View Gallery" />
 
-    <!-- Spacer View to add space -->
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="16dp" />
+        <Button
+            android:id="@+id/PlanTripbtn"
+            android:layout_width="210dp"
+            android:layout_height="56dp"
+            android:layout_marginBottom="16dp"
+            android:background="#4287f5"
+            android:text="Plan Trip" />
 
-    <Button
-        android:id="@+id/SettingsBtn"
-        android:layout_width="210dp"
-        android:layout_height="56dp"
-        android:layout_marginBottom="16dp"
-        android:background="#4287f5"
-        android:text="Settings" />
+        <Button
+            android:id="@+id/CreateMembtn"
+            android:layout_width="210dp"
+            android:layout_height="56dp"
+            android:layout_marginBottom="16dp"
+            android:background="#4287f5"
+            android:text="Create Memory" />
 
-</LinearLayout>
+        <Button
+            android:id="@+id/SettingsBtn"
+            android:layout_width="210dp"
+            android:layout_height="56dp"
+            android:background="#4287f5"
+            android:text="Settings" />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
