@@ -5,6 +5,30 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SettingsActivity">
+    tools:context=".SettingsActivity"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/DarkModeTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Dark Mode"
+        android:textSize="16sp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/DarkModeSw"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintVertical_chainStyle="packed"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="12dp" />
+
+    <Switch
+        android:id="@+id/DarkModeSw"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="On"
+        app:layout_constraintTop_toTopOf="@id/DarkModeTxt"
+        app:layout_constraintBottom_toBottomOf="@id/DarkModeTxt"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
