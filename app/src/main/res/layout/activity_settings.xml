@@ -8,20 +8,32 @@
     tools:context=".SettingsActivity"
     android:padding="16dp">
 
+    <!-- Back button: TOP-LEFT -->
+    <Button
+        android:id="@+id/btnBackToMain"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Back"
+        android:textSize="12sp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Dark mode label: below the back button -->
     <TextView
         android:id="@+id/DarkModeTxt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Dark Mode"
         android:textSize="16sp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/DarkModeSw"
-        app:layout_constraintHorizontal_bias="0"
-        app:layout_constraintVertical_chainStyle="packed"
         android:layout_marginTop="24dp"
-        android:layout_marginEnd="12dp" />
+        android:layout_marginEnd="12dp"
+        app:layout_constraintTop_toBottomOf="@id/btnBackToMain"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/DarkModeSw" />
 
+    <!-- Switch aligned with label -->
     <Switch
         android:id="@+id/DarkModeSw"
         android:layout_width="wrap_content"

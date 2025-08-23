@@ -18,6 +18,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Apply saved theme mode before inflating UI to avoid flicker
+        DarkModeManager.applySavedMode(getApplicationContext());
+
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
 
@@ -41,11 +45,11 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        // ==============================
+        // -------------------------
         // Buttons setup
-        // ==============================
+        // -------------------------
 
-        // Plan Trip button
+        // Plan Trip
         Button planTripBtn = findViewById(R.id.PlanTripbtn);
         planTripBtn.setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity.this, PlanTrip.class);
@@ -53,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        // View Gallery button
+        // View Gallery
         Button viewGalleryBtn = findViewById(R.id.ViewGallerybtn);
         viewGalleryBtn.setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity.this, ViewGalleryClass.class);
@@ -61,15 +65,15 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        // Create Memory button
+        // Create Memory (now opens CreateMemory)
         Button createMemBtn = findViewById(R.id.CreateMembtn);
         createMemBtn.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, PlanTrip.class); // <- was PlanTrip
+            Intent intent = new Intent(MainActivity.this, PlanTrip.class);
             intent.putExtra("userId", userId);
             startActivity(intent);
         });
 
-        // Settings button (uncomment this block only if SettingsActivity exists)
+        // Settings
         Button settingsBtn = findViewById(R.id.SettingsBtn);
         settingsBtn.setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
@@ -77,9 +81,7 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        // ==============================
-        // Logout button (top-right)
-        // ==============================
+        // Logout (top-right)
         Button logoutBtn = findViewById(R.id.btnLogout);
         logoutBtn.setOnClickListener(v -> {
             SessionManager.clearSession(MainActivity.this);
