@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
         // Create Memory (now opens CreateMemory)
         Button createMemBtn = findViewById(R.id.CreateMembtn);
         createMemBtn.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, PlanTrip.class);
+            Intent intent = new Intent(MainActivity.this, CreateMemory.class);
             intent.putExtra("userId", userId);
             startActivity(intent);
         });

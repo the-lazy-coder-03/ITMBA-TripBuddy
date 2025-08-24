@@ -11,7 +11,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.TripBuddy">
-
+        <activity
+            android:name=".CreateMemory"
+            android:exported="false"
+            android:theme="@style/Theme.TripBuddy" />
         <!-- Activities without intent-filters don't need android:exported -->
         <activity android:name=".SettingsActivity" />
         <activity android:name=".ViewGalleryClass" />
@@ -22,18 +25,16 @@
             android:label="@string/title_activity_login" />
         <activity android:name=".PlanTrip" />
         <activity android:name=".WelcomeMessage" />
-        <activity android:name=".MainActivity" />
-
-        <!-- Launcher / splash -->
+        <activity android:name=".MainActivity" /> <!-- Launcher / splash -->
         <activity
             android:name=".ImageSplash"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
     </application>
 
 </manifest>

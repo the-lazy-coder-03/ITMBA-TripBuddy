@@ -1,0 +1,34 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main" android:layout_width="match_parent" android:layout_height="match_parent"
+    android:orientation="vertical" android:padding="16dp">
+
+    <ImageView
+        android:id="@+id/imgPreview" android:layout_width="match_parent" android:layout_height="220dp"
+        android:scaleType="centerCrop" android:background="#EEE"/>
+
+    <Button android:id="@+id/btnPickImage" android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:text="Pick Photo" android:layout_marginTop="8dp"/>
+
+    <TextView android:id="@+id/tvMusic" android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:text="No music selected" android:paddingTop="8dp"/>
+
+    <Button android:id="@+id/btnPickMusic" android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:text="Pick Music (optional)" android:layout_marginTop="4dp"/>
+
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:orientation="horizontal" android:gravity="center" android:layout_marginTop="6dp">
+
+        <Button android:id="@+id/btnPlay" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Play"/>
+        <Button android:id="@+id/btnPause" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Pause" android:layout_marginStart="8dp"/>
+        <Button android:id="@+id/btnStop" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Stop" android:layout_marginStart="8dp"/>
+    </LinearLayout>
+
+    <EditText android:id="@+id/edtCaption" android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:hint="Caption (optional)" android:layout_marginTop="8dp"/>
+
+    <Button android:id="@+id/btnSaveMemory" android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:text="Save Memory" android:layout_marginTop="8dp"/>
+
+    <Button android:id="@+id/btnBackToMain2" android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:text="Back" android:layout_marginTop="8dp"/>
+</LinearLayout>
