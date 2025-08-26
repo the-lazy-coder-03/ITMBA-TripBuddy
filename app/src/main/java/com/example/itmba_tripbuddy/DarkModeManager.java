@@ -8,7 +8,7 @@ public final class DarkModeManager {
     private static final String PREF = "appearance_prefs";
     private static final String KEY_DARK = "dark_enabled";
 
-    private DarkModeManager() {}
+
 
     public static void setDarkEnabled(Context ctx, boolean enabled) {
         prefs(ctx).edit().putBoolean(KEY_DARK, enabled).apply();

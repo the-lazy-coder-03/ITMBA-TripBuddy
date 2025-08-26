@@ -12,10 +12,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TripBuddy">
         <activity
+            android:name=".delete"
+            android:exported="false" />
+        <activity
             android:name=".CreateMemory"
             android:exported="false"
-            android:theme="@style/Theme.TripBuddy" />
-        <!-- Activities without intent-filters don't need android:exported -->
+            android:theme="@style/Theme.TripBuddy" /> <!-- Activities without intent-filters don't need android:exported -->
         <activity android:name=".SettingsActivity" />
         <activity android:name=".ViewGalleryClass" />
         <activity android:name=".MainActivity2" />

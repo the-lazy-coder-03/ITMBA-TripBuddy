@@ -10,20 +10,21 @@ import androidx.annotation.Nullable;
 
 public class Database extends SQLiteOpenHelper {
 
-    // Database details
+    // --- DB ---
     private static final String DB_NAME = "TripInfo.db";
-    private static final int DB_VERSION = 4;
+    // Bump version when schema changes
+    private static final int DB_VERSION = 6;
 
-    // Users table
+    // --- Users ---
     private static final String TABLE_USERS = "Users";
     private static final String USER_ID = "id";
     private static final String EMAIL = "Email";
     private static final String PASSWORD = "Password";
 
-    // Trips table
+    // --- Trips ---
     private static final String TABLE_TRIPS = "Trips";
     private static final String TRIP_ID = "id";
-    private static final String USER_FK = "user_id"; // foreign key to Users table
+    private static final String USER_FK = "user_id";
     private static final String TRIP_NAME = "tripName";
     private static final String TRIP_DATE = "tripDate";
     private static final String TRIP_TYPE = "tripType";
@@ -32,22 +33,38 @@ public class Database extends SQLiteOpenHelper {
     private static final String COST = "TravelCost";
     private static final String COUNTER = "TripCounter";
 
+    // --- Memories ---
+    private static final String TABLE_MEMORIES = "Memories";
+    private static final String MEMORY_ID = "id";
+    private static final String MEMORY_USER_ID = "user_id";
+    private static final String MEMORY_CAPTION = "caption";
+    private static final String MEMORY_IMAGE_URI = "imageUri";
+    private static final String MEMORY_MUSIC_URI = "musicUri";
+
     public Database(@Nullable Context context) {
         super(context, DB_NAME, null, DB_VERSION);
     }
 
     @Override
+    public void onConfigure(SQLiteDatabase db) {
+        super.onConfigure(db);
+        // Required for SQLite on Android to enforce FK
+        db.setForeignKeyConstraintsEnabled(true);
+    }
+
+    @Override
     public void onCreate(SQLiteDatabase db) {
-        // Create Users table
-        String createUsers = "CREATE TABLE IF NOT EXISTS " + TABLE_USERS + " ("
+        // --- Users ---
+        final String createUsers = "CREATE TABLE IF NOT EXISTS " + TABLE_USERS + " ("
                 + USER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + EMAIL + " TEXT UNIQUE, "
-                + PASSWORD + " TEXT);";
+                + PASSWORD + " TEXT"
+                + ");";
 
-        // Create Trips table
-        String createTrips = "CREATE TABLE IF NOT EXISTS " + TABLE_TRIPS + " ("
+        // --- Trips ---
+        final String createTrips = "CREATE TABLE IF NOT EXISTS " + TABLE_TRIPS + " ("
                 + TRIP_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + USER_FK + " INTEGER, "
+                + USER_FK + " INTEGER NOT NULL, "
                 + TRIP_NAME + " TEXT, "
                 + TRIP_DATE + " TEXT, "
                 + TRIP_TYPE + " TEXT, "
@@ -55,64 +72,89 @@ public class Database extends SQLiteOpenHelper {
                 + NOTES + " TEXT, "
                 + COST + " REAL, "
                 + COUNTER + " INTEGER, "
-                + "FOREIGN KEY(" + USER_FK + ") REFERENCES " + TABLE_USERS + "(" + USER_ID + "));";
+                + "FOREIGN KEY(" + USER_FK + ") REFERENCES " + TABLE_USERS + "(" + USER_ID + ") ON DELETE CASCADE"
+                + ");";
 
-        db.execSQL(createUsers);
-        db.execSQL(createTrips);
+        // --- Memories ---
+        final String createMemories = "CREATE TABLE IF NOT EXISTS " + TABLE_MEMORIES + " ("
+                + MEMORY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + MEMORY_USER_ID + " INTEGER NOT NULL, "
+                + MEMORY_CAPTION + " TEXT, "
+                + MEMORY_IMAGE_URI + " TEXT, "
+                + MEMORY_MUSIC_URI + " TEXT, "
+                + "FOREIGN KEY(" + MEMORY_USER_ID + ") REFERENCES " + TABLE_USERS + "(" + USER_ID + ") ON DELETE CASCADE"
+                + ");";
+
+        // --- Indices for faster lookups ---
+        final String idxTripsUser = "CREATE INDEX IF NOT EXISTS idx_trips_user ON " + TABLE_TRIPS + "(" + USER_FK + ");";
+        final String idxMemoriesUser = "CREATE INDEX IF NOT EXISTS idx_memories_user ON " + TABLE_MEMORIES + "(" + MEMORY_USER_ID + ");";
+        final String idxUsersEmail = "CREATE INDEX IF NOT EXISTS idx_users_email ON " + TABLE_USERS + "(" + EMAIL + ");";
+
+        db.beginTransaction();
+        try {
+            db.execSQL(createUsers);
+            db.execSQL(createTrips);
+            db.execSQL(createMemories);
+            db.execSQL(idxTripsUser);
+            db.execSQL(idxMemoriesUser);
+            db.execSQL(idxUsersEmail);
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
     }
 
+    /**
+     * Simple upgrade strategy:
+     * - Recreate tables if missing
+     * - Add indices if missing
+     * (Keeps existing data; no destructive drops unless absolutely needed)
+     */
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_TRIPS);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_USERS);
+        // For schema tweaks, ensure tables/indices exist
         onCreate(db);
     }
 
-    // ---------------- USER METHODS ---------------- //
+    // ---------------------------
+    // Users
+    // ---------------------------
 
     public boolean insertUser(String email, String password) {
-        SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase db = getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(EMAIL, email);
         values.put(PASSWORD, password);
-
         long result = db.insert(TABLE_USERS, null, values);
-        db.close();
         return result != -1;
     }
 
     public boolean checkUser(String email, String password) {
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery(
-                "SELECT * FROM " + TABLE_USERS + " WHERE " + EMAIL + "=? AND " + PASSWORD + "=?",
+        try (Cursor cursor = getReadableDatabase().rawQuery(
+                "SELECT 1 FROM " + TABLE_USERS + " WHERE " + EMAIL + "=? AND " + PASSWORD + "=? LIMIT 1",
                 new String[]{email, password}
-        );
-        boolean exists = cursor.getCount() > 0;
-        cursor.close();
-        db.close();
-        return exists;
+        )) {
+            return cursor.moveToFirst();
+        }
     }
 
     public int getUserId(String email, String password) {
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery(
-                "SELECT " + USER_ID + " FROM " + TABLE_USERS + " WHERE " + EMAIL + "=? AND " + PASSWORD + "=?",
+        try (Cursor cursor = getReadableDatabase().rawQuery(
+                "SELECT " + USER_ID + " FROM " + TABLE_USERS + " WHERE " + EMAIL + "=? AND " + PASSWORD + "=? LIMIT 1",
                 new String[]{email, password}
-        );
-        int userId = -1;
-        if (cursor.moveToFirst()) {
-            userId = cursor.getInt(0);
+        )) {
+            if (cursor.moveToFirst()) return cursor.getInt(0);
+            return -1;
         }
-        cursor.close();
-        db.close();
-        return userId;
     }
 
-    // ---------------- TRIP METHODS ---------------- //
+    // ---------------------------
+    // Trips
+    // ---------------------------
 
     public boolean insertTrip(int userId, String name, String date, String type,
                               String destination, String notes, double cost, int counter) {
-        SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase db = getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(USER_FK, userId);
         values.put(TRIP_NAME, name);
@@ -122,30 +164,63 @@ public class Database extends SQLiteOpenHelper {
         values.put(NOTES, notes);
         values.put(COST, cost);
         values.put(COUNTER, counter);
-
         long result = db.insert(TABLE_TRIPS, null, values);
-        db.close();
         return result != -1;
     }
 
-    public Cursor getTripsForUser(int userId) {
-        SQLiteDatabase db = this.getReadableDatabase();
-        return db.rawQuery(
-                "SELECT * FROM " + TABLE_TRIPS + " WHERE " + USER_FK + "=?",
-                new String[]{String.valueOf(userId)}
-        );
-    }
     public int getTripCountForUser(int userId) {
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor c = db.rawQuery(
+        try (Cursor c = getReadableDatabase().rawQuery(
                 "SELECT COUNT(*) FROM " + TABLE_TRIPS + " WHERE " + USER_FK + "=?",
                 new String[]{String.valueOf(userId)}
-        );
-        int count = 0;
-        if (c.moveToFirst()) count = c.getInt(0);
-        c.close();
-        db.close();
-        return count;
+        )) {
+            if (c.moveToFirst()) return c.getInt(0);
+            return 0;
+        }
     }
 
+    // If you ever need it:
+    public Cursor getTripsForUser(int userId) {
+        // Caller must close the returned Cursor.
+        return getReadableDatabase().rawQuery(
+                "SELECT * FROM " + TABLE_TRIPS + " WHERE " + USER_FK + "=? ORDER BY " + TRIP_ID + " ASC",
+                new String[]{String.valueOf(userId)}
+        );
+    }
+
+    // ---------------------------
+    // Memories
+    // ---------------------------
+
+    public boolean insertMemory(int userId, String caption, String imageUri, String musicUri) {
+        SQLiteDatabase db = getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(MEMORY_USER_ID, userId);
+        values.put(MEMORY_CAPTION, caption);
+        values.put(MEMORY_IMAGE_URI, imageUri);
+        values.put(MEMORY_MUSIC_URI, musicUri);
+
+        long result = db.insert(TABLE_MEMORIES, null, values);
+        return result != -1;
+    }
+
+    public Cursor getMemoriesForUser(int userId) {
+        // Caller must close the returned Cursor.
+        return getReadableDatabase().rawQuery(
+                "SELECT * FROM " + TABLE_MEMORIES + " WHERE " + MEMORY_USER_ID + "=? ORDER BY " + MEMORY_ID + " ASC",
+                new String[]{String.valueOf(userId)}
+        );
+    }
+
+    public Cursor getLatestMemoryForUser(int userId) {
+        // Convenience method; caller must close.
+        return getReadableDatabase().rawQuery(
+                "SELECT * FROM " + TABLE_MEMORIES + " WHERE " + MEMORY_USER_ID + "=? ORDER BY " + MEMORY_ID + " DESC LIMIT 1",
+                new String[]{String.valueOf(userId)}
+        );
+    }
+
+    // Optional helpers you might want later:
+    // public int deleteMemoryById(int memoryId) { ... }
+    // public int updateUserPassword(int userId, String newPass) { ... }
 }

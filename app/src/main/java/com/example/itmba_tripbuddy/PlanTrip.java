@@ -136,7 +136,7 @@ public class PlanTrip extends AppCompatActivity {
 
         // Map to DB schema
         String tripName = destination;
-        String tripDate = todayIso();
+        String tripDate = DateGen();
         String tripType = type;
         String dest     = destination;
         String note     = buildNotes(notes, custom, food, discount);
@@ -167,7 +167,7 @@ public class PlanTrip extends AppCompatActivity {
         return sb.toString();
     }
 
-    private String todayIso() {
+    private String DateGen() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             return LocalDate.now().toString();
         } else {

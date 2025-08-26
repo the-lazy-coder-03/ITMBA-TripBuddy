@@ -19,7 +19,7 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-public class CreateMemory extends AppCompatActivity {
+public class memory extends AppCompatActivity {
 
     private static final int PICK_IMAGE_REQUEST = 1;
     private static final int PICK_MUSIC_REQUEST = 2;
@@ -67,15 +67,8 @@ public class CreateMemory extends AppCompatActivity {
             startActivityForResult(intent, PICK_MUSIC_REQUEST);
         });
 
-        saveMemoryBtn.setOnClickListener(v -> saveMemory());
 
-        Button backToMain = findViewById(R.id.btnBackToMain2);
-        backToMain.setOnClickListener(v -> {
-            Intent intent = new Intent(CreateMemory.this, MainActivity.class);
-            intent.putExtra("userId", userId);
-            startActivity(intent);
-            finish();
-        });
+        saveMemoryBtn.setOnClickListener(v -> saveMemory());
     }
 
     @Override
@@ -124,7 +117,6 @@ public class CreateMemory extends AppCompatActivity {
             Toast.makeText(this, "Failed to save memory.", Toast.LENGTH_SHORT).show();
         }
     }
-
 
     private String copyUriToInternalStorage(Uri sourceUri, String filename) {
         try {

@@ -1,34 +1,106 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/main" android:layout_width="match_parent" android:layout_height="match_parent"
-    android:orientation="vertical" android:padding="16dp">
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:padding="16dp"
+    tools:context=".CreateMemory">
 
+    <!-- Photo preview -->
     <ImageView
-        android:id="@+id/imgPreview" android:layout_width="match_parent" android:layout_height="220dp"
-        android:scaleType="centerCrop" android:background="#EEE"/>
+        android:id="@+id/imgPreview"
+        android:layout_width="match_parent"
+        android:layout_height="220dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:scaleType="centerCrop"
+        android:background="#EEE" />
 
-    <Button android:id="@+id/btnPickImage" android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:text="Pick Photo" android:layout_marginTop="8dp"/>
+    <!-- Pick photo -->
+    <Button
+        android:id="@+id/btnPickImage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/imgPreview"
+        android:layout_marginTop="8dp"
+        android:text="Pick Photo" />
 
-    <TextView android:id="@+id/tvMusic" android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:text="No music selected" android:paddingTop="8dp"/>
+    <!-- Music status -->
+    <TextView
+        android:id="@+id/tvMusic"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/btnPickImage"
+        android:layout_marginTop="8dp"
+        android:text="No music selected" />
 
-    <Button android:id="@+id/btnPickMusic" android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:text="Pick Music (optional)" android:layout_marginTop="4dp"/>
+    <!-- Pick music -->
+    <Button
+        android:id="@+id/btnPickMusic"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvMusic"
+        android:layout_marginTop="4dp"
+        android:text="Pick Music (optional)" />
 
-    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:orientation="horizontal" android:gravity="center" android:layout_marginTop="6dp">
+    <!-- Music controls container -->
+    <LinearLayout
+        android:id="@+id/musicControls"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/btnPickMusic"
+        android:layout_marginTop="6dp"
+        android:gravity="center"
+        android:orientation="horizontal">
 
-        <Button android:id="@+id/btnPlay" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Play"/>
-        <Button android:id="@+id/btnPause" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Pause" android:layout_marginStart="8dp"/>
-        <Button android:id="@+id/btnStop" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Stop" android:layout_marginStart="8dp"/>
+        <Button
+            android:id="@+id/btnPlay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Play" />
+
+        <Button
+            android:id="@+id/btnPause"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="Pause" />
+
+        <Button
+            android:id="@+id/btnStop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="Stop" />
     </LinearLayout>
 
-    <EditText android:id="@+id/edtCaption" android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:hint="Caption (optional)" android:layout_marginTop="8dp"/>
+    <!-- Caption -->
+    <EditText
+        android:id="@+id/edtCaption"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/musicControls"
+        android:layout_marginTop="8dp"
+        android:hint="Caption (optional)" />
 
-    <Button android:id="@+id/btnSaveMemory" android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:text="Save Memory" android:layout_marginTop="8dp"/>
+    <!-- Save memory -->
+    <Button
+        android:id="@+id/btnSaveMemory"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/edtCaption"
+        android:layout_marginTop="8dp"
+        android:text="Save Memory" />
 
-    <Button android:id="@+id/btnBackToMain2" android:layout_width="wrap_content" android:layout_height="wrap_content"
-        android:text="Back" android:layout_marginTop="8dp"/>
-</LinearLayout>
+    <!-- Back -->
+    <Button
+        android:id="@+id/btnBackToMain2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/btnSaveMemory"
+        android:layout_marginTop="8dp"
+        android:text="Back" />
+
+</RelativeLayout>
