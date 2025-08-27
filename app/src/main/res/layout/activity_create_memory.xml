@@ -8,44 +8,46 @@
     android:padding="16dp"
     tools:context=".CreateMemory">
 
-    <!-- Photo preview -->
     <ImageView
         android:id="@+id/imgPreview"
         android:layout_width="match_parent"
         android:layout_height="220dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
-        android:scaleType="centerCrop"
-        android:background="#EEE" />
+        android:layout_marginTop="20dp"
+        android:background="#EEE"
+        android:scaleType="centerCrop" />
 
-    <!-- Pick photo -->
+    <EditText
+        android:id="@+id/edtCaption"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/imgPreview"
+        android:layout_marginTop="12dp"
+        android:hint="Caption (optional)" />
+
     <Button
         android:id="@+id/btnPickImage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/imgPreview"
+        android:layout_below="@id/edtCaption"
         android:layout_marginTop="8dp"
         android:text="Pick Photo" />
 
-    <!-- Music status -->
     <TextView
         android:id="@+id/tvMusic"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/btnPickImage"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="12dp"
         android:text="No music selected" />
 
-    <!-- Pick music -->
     <Button
         android:id="@+id/btnPickMusic"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/tvMusic"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="6dp"
         android:text="Pick Music (optional)" />
 
-    <!-- Music controls container -->
     <LinearLayout
         android:id="@+id/musicControls"
         android:layout_width="match_parent"
@@ -76,25 +78,14 @@
             android:text="Stop" />
     </LinearLayout>
 
-    <!-- Caption -->
-    <EditText
-        android:id="@+id/edtCaption"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/musicControls"
-        android:layout_marginTop="8dp"
-        android:hint="Caption (optional)" />
-
-    <!-- Save memory -->
     <Button
         android:id="@+id/btnSaveMemory"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/edtCaption"
-        android:layout_marginTop="8dp"
+        android:layout_below="@id/musicControls"
+        android:layout_marginTop="12dp"
         android:text="Save Memory" />
 
-    <!-- Back -->
     <Button
         android:id="@+id/btnBackToMain2"
         android:layout_width="wrap_content"

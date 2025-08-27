@@ -13,15 +13,15 @@ public class SettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         // Apply saved mode before inflating UI (prevents flicker)
-        DarkModeManager.applySavedMode(getApplicationContext());
+        DarkMode.applySavedMode(getApplicationContext());
 
         setContentView(R.layout.activity_settings);
 
         // Dark Mode switch
         Switch darkModeSw = findViewById(R.id.DarkModeSw);
-        darkModeSw.setChecked(DarkModeManager.isDarkEnabled(this));
+        darkModeSw.setChecked(DarkMode.isDarkEnabled(this));
         darkModeSw.setOnCheckedChangeListener((btn, isChecked) -> {
-            DarkModeManager.setDarkEnabled(this, isChecked);
+            DarkMode.setDarkEnabled(this, isChecked);
             recreate(); // refresh this screen immediately
         });
 

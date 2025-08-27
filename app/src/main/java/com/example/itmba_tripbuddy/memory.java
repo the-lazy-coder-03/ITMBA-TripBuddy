@@ -22,16 +22,16 @@ import java.io.OutputStream;
 public class memory extends AppCompatActivity {
 
     private static final int PICK_IMAGE_REQUEST = 1;
-    private static final int PICK_MUSIC_REQUEST = 2;
+    private static final int PICK_Song_REQUEST = 2;
 
-    private Uri selectedImageUri;
-    private Uri selectedMusicUri;
-    private String copiedMusicPath;
+    private Uri selecteImgage;
+    private Uri selectedSong;
+    private String copiedSong;
     private int userId;
 
-    private EditText captionInput;
+    private EditText captionTxt;
     private ImageView imagePreview;
-    private Button selectImageBtn, selectMusicBtn, saveMemoryBtn;
+    private Button selectImageBtn, selectSongBtn, saveMemoryBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,10 +48,10 @@ public class memory extends AppCompatActivity {
         userId = getIntent().getIntExtra("userId", -1);
         if (userId == -1) userId = SessionManager.getUserId(this);
 
-        captionInput = findViewById(R.id.edtCaption);
+        captionTxt = findViewById(R.id.edtCaption);
         imagePreview = findViewById(R.id.imgPreview);
         selectImageBtn = findViewById(R.id.btnPickImage);
-        selectMusicBtn = findViewById(R.id.btnPickMusic);
+        selectSongBtn = findViewById(R.id.btnPickMusic);
         saveMemoryBtn = findViewById(R.id.btnSaveMemory);
 
         selectImageBtn.setOnClickListener(v -> {
@@ -60,15 +60,15 @@ public class memory extends AppCompatActivity {
             startActivityForResult(intent, PICK_IMAGE_REQUEST);
         });
 
-        selectMusicBtn.setOnClickListener(v -> {
+        selectSongBtn.setOnClickListener(v -> {
             Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
             intent.addCategory(Intent.CATEGORY_OPENABLE);
             intent.setType("audio/*");
-            startActivityForResult(intent, PICK_MUSIC_REQUEST);
+            startActivityForResult(intent, PICK_Song_REQUEST);
         });
 
 
-        saveMemoryBtn.setOnClickListener(v -> saveMemory());
+        saveMemoryBtn.setOnClickListener(v ->   savememory());
     }
 
     @Override
@@ -76,40 +76,40 @@ public class memory extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && data != null) {
             if (requestCode == PICK_IMAGE_REQUEST) {
-                selectedImageUri = data.getData();
-                imagePreview.setImageURI(selectedImageUri);
-            } else if (requestCode == PICK_MUSIC_REQUEST) {
-                selectedMusicUri = data.getData();
+                selecteImgage = data.getData();
+                imagePreview.setImageURI(selecteImgage);
+            } else if (requestCode == PICK_Song_REQUEST) {
+                selectedSong = data.getData();
                 getContentResolver().takePersistableUriPermission(
-                        selectedMusicUri,
+                        selectedSong,
                         Intent.FLAG_GRANT_READ_URI_PERMISSION
                 );
-                copiedMusicPath = copyUriToInternalStorage(selectedMusicUri, "music_" + System.currentTimeMillis() + ".mp3");
-                if (copiedMusicPath != null) {
+                copiedSong = copyUriToInternalStorage(selectedSong, "music_" + System.currentTimeMillis() + ".mp3");
+                if (copiedSong != null) {
                     Toast.makeText(this, "Music selected", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(this, "Failed to copy music file", Toast.LENGTH_SHORT).show();
-                    selectedMusicUri = null;
+                    selectedSong = null;
                 }
             }
         }
     }
 
-    private void saveMemory() {
-        String caption = captionInput.getText().toString().trim();
-        if (caption.isEmpty() || selectedImageUri == null || copiedMusicPath == null) {
+    private void savememory() {
+        String caption = captionTxt.getText().toString().trim();
+        if (caption.isEmpty() || selecteImgage == null || copiedSong == null) {
             Toast.makeText(this, "Please select image, music, and enter a caption.", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        String imagePath = copyUriToInternalStorage(selectedImageUri, "img_" + System.currentTimeMillis() + ".jpg");
+        String imagePath = copyUriToInternalStorage(selecteImgage, "img_" + System.currentTimeMillis() + ".jpg");
 
         if (imagePath == null) {
             Toast.makeText(this, "Failed to save image file.", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        boolean success = new Database(this).insertMemory(userId, caption, imagePath, copiedMusicPath);
+        boolean success = new Database(this).insertMemory(userId, caption, imagePath, copiedSong);
         if (success) {
             Toast.makeText(this, "Memory saved!", Toast.LENGTH_SHORT).show();
             finish();

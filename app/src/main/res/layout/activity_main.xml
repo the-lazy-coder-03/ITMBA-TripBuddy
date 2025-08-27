@@ -7,18 +7,23 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <!-- Logout button fixed top-right -->
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/btnLogout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Logout"
-        app:layout_constraintTop_toTopOf="parent"
+        android:textAllCaps="false"
+        android:insetTop="6dp"
+        android:insetBottom="6dp"
+        app:cornerRadius="18dp"
+        app:strokeWidth="1dp"
+        app:strokeColor="?attr/colorPrimary"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         android:layout_margin="16dp" />
 
-    <!-- Buttons stacked vertically in the center -->
     <LinearLayout
+        android:id="@+id/centerButtons"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -28,37 +33,58 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/ViewGallerybtn"
-            android:layout_width="210dp"
-            android:layout_height="56dp"
-            android:layout_marginBottom="16dp"
-            android:background="#4287f5"
-            android:text="View Gallery" />
+            android:layout_width="260dp"
+            android:layout_height="52dp"
+            android:text="View Gallery"
+            android:textStyle="bold"
+            android:textAllCaps="false"
+            android:letterSpacing="0.01"
+            app:cornerRadius="20dp"
+            app:backgroundTint="?attr/colorPrimary"
+            android:textColor="@android:color/white" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/PlanTripbtn"
-            android:layout_width="210dp"
-            android:layout_height="56dp"
-            android:layout_marginBottom="16dp"
-            android:background="#4287f5"
-            android:text="Plan Trip" />
+            android:layout_width="260dp"
+            android:layout_height="52dp"
+            android:layout_marginTop="14dp"
+            android:text="Plan Trip"
+            android:textStyle="bold"
+            android:textAllCaps="false"
+            android:letterSpacing="0.01"
+            app:cornerRadius="20dp"
+            app:backgroundTint="?attr/colorPrimary"
+            android:textColor="@android:color/white" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/CreateMembtn"
-            android:layout_width="210dp"
-            android:layout_height="56dp"
-            android:layout_marginBottom="16dp"
-            android:background="#4287f5"
-            android:text="Create Memory" />
+            android:layout_width="260dp"
+            android:layout_height="52dp"
+            android:layout_marginTop="14dp"
+            android:text="Create Memory"
+            android:textStyle="bold"
+            android:textAllCaps="false"
+            android:letterSpacing="0.01"
+            app:cornerRadius="20dp"
+            app:backgroundTint="?attr/colorPrimary"
+            android:textColor="@android:color/white" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/SettingsBtn"
-            android:layout_width="210dp"
-            android:layout_height="56dp"
-            android:background="#4287f5"
-            android:text="Settings" />
-
+            android:layout_width="260dp"
+            android:layout_height="52dp"
+            android:layout_marginTop="14dp"
+            android:text="Settings"
+            android:textStyle="bold"
+            android:textAllCaps="false"
+            android:letterSpacing="0.01"
+            app:cornerRadius="20dp"
+            app:strokeWidth="1dp"
+            app:strokeColor="?attr/colorPrimary"
+            app:backgroundTint="@android:color/transparent"
+            android:textColor="?attr/colorPrimary" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -11,10 +11,10 @@
         android:id="@+id/welcomeText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Welcome To TripBuddy Dashboard!"
+        android:text="Welcome To TripBuddy"
         android:textSize="24sp"
         android:textColor="#000000"
         android:layout_centerInParent="true"
-        android:textStyle="bold" />
+     />
 
 </RelativeLayout>

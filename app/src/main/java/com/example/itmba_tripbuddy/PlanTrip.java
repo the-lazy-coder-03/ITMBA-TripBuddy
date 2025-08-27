@@ -27,7 +27,7 @@ public class PlanTrip extends AppCompatActivity {
     private Database dbHelper;
     private int userId;
 
-    // Views (IDs taken from your XML)
+
     private EditText edtDestination, edtNotes, edtCustomExpenses, edtFoodExpenses;
     private TextView tvDisplayCost, tvDiscount, tvFinalCost;
     private Spinner spinnerTripType;
@@ -49,7 +49,7 @@ public class PlanTrip extends AppCompatActivity {
             return insets;
         });
 
-        // --- DB + user ---
+
         dbHelper = new Database(this);
         userId = getIntent().getIntExtra("userId", -1);
         if (userId == -1) {
@@ -58,7 +58,7 @@ public class PlanTrip extends AppCompatActivity {
             return;
         }
 
-        // --- Bind views ---
+
         edtDestination    = findViewById(R.id.EdtDestination);
         edtNotes          = findViewById(R.id.EdtNotes);
         edtCustomExpenses = findViewById(R.id.EdtCustomExpenses);
@@ -70,7 +70,7 @@ public class PlanTrip extends AppCompatActivity {
         btnSaveTrip       = findViewById(R.id.SaveTripBtn);
         btnConfirm        = findViewById(R.id.ConfBtn);
 
-        // --- Spinner data ---
+
         String[] tripTypes = {"Sightseeing", "Hiking", "BeachDay", "Museum Day"};
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
                 this, android.R.layout.simple_spinner_item, tripTypes
@@ -78,13 +78,13 @@ public class PlanTrip extends AppCompatActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerTripType.setAdapter(adapter);
 
-        // Calculate preview
+
         btnSaveTrip.setOnClickListener(v -> calculateAndShowCosts());
 
-        // Confirm save
+
         btnConfirm.setOnClickListener(v -> saveTripToDb());
 
-        // Back button
+
         Button backToMain = findViewById(R.id.btnBackToMain);
         backToMain.setOnClickListener(v -> {
             Intent intent = new Intent(PlanTrip.this, MainActivity.class);
@@ -99,8 +99,8 @@ public class PlanTrip extends AppCompatActivity {
         double food     = parseDoubleOrZero(edtFoodExpenses.getText().toString().trim());
         double subtotal = custom + food;
 
-        // Count trips already saved (before this one)
-        int existingTrips = dbHelper.getTripCountForUser(userId);
+
+        int existingTrips = dbHelper.getTripCount(userId);
         boolean eligible  = existingTrips >= 3; // discount from 4th trip onward
         double discount   = eligible ? subtotal * DISCOUNT_RATE : 0.0;
         double finalCost  = subtotal - discount;
@@ -129,12 +129,12 @@ public class PlanTrip extends AppCompatActivity {
         double food     = parseDoubleOrZero(edtFoodExpenses.getText().toString().trim());
         double subtotal = custom + food;
 
-        int existingTrips = dbHelper.getTripCountForUser(userId); // BEFORE inserting
+        int existingTrips = dbHelper.TripCounter(userId); // BEFORE inserting
         boolean eligible  = existingTrips >= 3;
         double discount   = eligible ? subtotal * DISCOUNT_RATE : 0.0;
         double finalCost  = subtotal - discount;
 
-        // Map to DB schema
+
         String tripName = destination;
         String tripDate = DateGen();
         String tripType = type;

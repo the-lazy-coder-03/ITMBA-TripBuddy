@@ -7,14 +7,15 @@
     android:background="@color/white"
     tools:context=".ImageSplash">
 
-    <!-- Centered App Logo -->
     <ImageView
         android:id="@+id/logo"
-        android:layout_width="250dp"
-        android:layout_height="250dp"
-        android:layout_centerInParent="true"
-        android:src="@drawable/tripbuddy"
+        android:layout_width="350dp"
+        android:layout_height="350dp"
+        android:adjustViewBounds="true"
         android:scaleType="fitCenter"
-        android:adjustViewBounds="true" />
+        android:src="@drawable/images2"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_marginBottom="60dp" />
 
 </RelativeLayout>

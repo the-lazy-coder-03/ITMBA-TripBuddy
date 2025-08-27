@@ -19,8 +19,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Apply saved theme mode before inflating UI to avoid flicker
-        DarkModeManager.applySavedMode(getApplicationContext());
+
+        DarkMode.applySavedMode(getApplicationContext());
 
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
@@ -31,23 +31,16 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-        // Ensure DB exists (optional)
-        new Database(this).getWritableDatabase().close();
-
-        // Get userId from intent or session
         userId = getIntent().getIntExtra("userId", -1);
         if (userId == -1) userId = SessionManager.getUserId(this);
 
         if (userId == -1) {
-            Toast.makeText(this, "No user logged in. Please log in again.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "User not logged in .Try again", Toast.LENGTH_SHORT).show();
             startActivity(new Intent(this, LoginScreen.class));
             finish();
             return;
         }
 
-        // -------------------------
-        // Buttons setup
-        // -------------------------
 
         // Plan Trip
         Button planTripBtn = findViewById(R.id.PlanTripbtn);
@@ -65,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        // Create Memory (now opens CreateMemory)
+        // Create Memory
         Button createMemBtn = findViewById(R.id.CreateMembtn);
         createMemBtn.setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity.this, CreateMemory.class);
@@ -81,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        // Logout (top-right)
+        // Logout
         Button logoutBtn = findViewById(R.id.btnLogout);
         logoutBtn.setOnClickListener(v -> {
             SessionManager.clearSession(MainActivity.this);
